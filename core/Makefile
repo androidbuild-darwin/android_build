@@ -6643,7 +6643,7 @@ $(BUILT_TARGET_FILES_DIR): \
 	    $(APEX_KEYS_FILE) \
 	    $(SOONG_ZIP) \
 	    $(HOST_OUT_EXECUTABLES)/fs_config \
-	    $(HOST_OUT_EXECUTABLES)/map_file_generator \
+	    $(if $(COPY_IMAGES_FOR_TARGET_FILES_ZIP),$(HOST_OUT_EXECUTABLES)/map_file_generator) \
 	    $(ADD_IMG_TO_TARGET_FILES) \
 	    $(MAKE_RECOVERY_PATCH) \
 	    $(BUILT_KERNEL_CONFIGS_FILE) \
@@ -7176,7 +7176,7 @@ $(call declare-container-license-deps,$(BUILT_TARGET_FILES_PACKAGE), $(INSTALLED
             $(APKCERTS_FILE) \
             $(APEX_KEYS_FILE) \
             $(HOST_OUT_EXECUTABLES)/fs_config \
-            $(HOST_OUT_EXECUTABLES)/map_file_generator \
+            $(if $(COPY_IMAGES_FOR_TARGET_FILES_ZIP),$(HOST_OUT_EXECUTABLES)/map_file_generator) \
             $(ADD_IMG_TO_TARGET_FILES) \
             $(MAKE_RECOVERY_PATCH) \
             $(BUILT_KERNEL_CONFIGS_FILE) \
