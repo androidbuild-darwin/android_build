@@ -570,8 +570,8 @@ FULL_BUILD := true
 #
 
 subdir_makefiles := $(SOONG_OUT_DIR)/installs-$(TARGET_PRODUCT).mk $(SOONG_ANDROID_MK)
-# Android.mk files are only used on Linux builds, Mac only supports Android.bp
-ifeq ($(HOST_OS),linux)
+# Include legacy modules for target builds on Linux and Darwin.
+ifneq ($(filter linux darwin,$(HOST_OS)),)
   subdir_makefiles += $(file <$(OUT_DIR)/.module_paths/Android.mk.list)
 endif
 subdir_makefiles += $(SOONG_OUT_DIR)/late-$(TARGET_PRODUCT).mk
