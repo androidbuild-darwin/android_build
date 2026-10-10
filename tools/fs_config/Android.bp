@@ -33,6 +33,11 @@ bootstrap_go_package {
 cc_binary_host {
     name: "fs_config",
     srcs: ["fs_config.c"],
+    target: {
+        darwin: {
+            include_dirs: ["external/libcap/libcap/include/uapi"],
+        },
+    },
     shared_libs: [
         "libcutils",
     ],
