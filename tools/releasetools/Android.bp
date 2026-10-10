@@ -165,8 +165,6 @@ python_defaults {
         "ota_utils_lib",
     ],
     required: [
-        "apexd_host",
-        "brillo_update_payload",
         "checkvintf",
         "lz4",
         "toybox",
@@ -174,9 +172,11 @@ python_defaults {
         "deapexer",
     ],
     target: {
-        darwin: {
-            // required module "brillo_update_payload" is disabled on darwin
-            enabled: false,
+        linux: {
+            required: [
+                "apexd_host",
+                "brillo_update_payload",
+            ],
         },
     },
 }
