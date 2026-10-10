@@ -284,8 +284,8 @@ subdir_makefiles := \
     $(SOONG_ANDROID_MK) \
     build/make/target/board/android-info.mk
 
-# Android.mk files are only used on Linux builds, Mac only supports Android.bp
-ifeq ($(HOST_OS),linux)
+# Include legacy modules for target builds on Linux and Darwin.
+ifneq ($(filter linux darwin,$(HOST_OS)),)
   ifeq ($(PRODUCT_IGNORE_ALL_ANDROIDMK),true)
     allowed_androidmk_files :=
     ifdef PRODUCT_ANDROIDMK_ALLOWLIST_FILE
