@@ -1357,11 +1357,7 @@ $(if $(strip $(1)), \
 )
 endef
 
-ifeq ($(HOST_OS),darwin)
-  # Target builds are not supported on Mac
-  product_target_FILES :=
-  product_host_FILES := $(call host-installed-files,$(INTERNAL_PRODUCT))
-else ifdef FULL_BUILD
+ifdef FULL_BUILD
   ifneq (true,$(ALLOW_MISSING_DEPENDENCIES))
     # Check to ensure that all modules in PRODUCT_PACKAGES exist (opt in per product)
     ifeq (true,$(PRODUCT_ENFORCE_PACKAGES_EXIST))
