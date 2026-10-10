@@ -1491,7 +1491,7 @@ endif
 # contains everything that's built during the current make, but it also further
 # extends ALL_DEFAULT_INSTALLED_MODULES.
 ALL_DEFAULT_INSTALLED_MODULES := $(modules_to_install)
-ifeq ($(HOST_OS),linux)
+ifneq ($(filter linux darwin,$(HOST_OS)),)
   include $(BUILD_SYSTEM)/Makefile
 endif
 modules_to_install := $(sort $(ALL_DEFAULT_INSTALLED_MODULES))
