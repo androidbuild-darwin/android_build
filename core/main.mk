@@ -1749,11 +1749,7 @@ $(call dist-for-goals, dist_files, $(SOONG_OUT_DIR)/module_bp_java_deps.json)
 $(call dist-for-goals, dist_files, $(PRODUCT_OUT)/module-info.json)
 
 .PHONY: apps_only
-ifeq ($(HOST_OS),darwin)
-  # Mac only supports building host modules
-  droid_targets: $(filter $(HOST_OUT_ROOT)/%,$(modules_to_install)) dist_files
-
-else ifneq ($(TARGET_BUILD_APPS),)
+ifneq ($(TARGET_BUILD_APPS),)
   # If this build is just for apps, only build apps and not the full system by default.
 
   # Dist the installed files if they exist, except the installed symlinks. dist-for-goals emits
