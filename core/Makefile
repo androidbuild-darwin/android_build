@@ -5707,42 +5707,45 @@ endif
 # -----------------------------------------------------------------
 # host tools needed to build dist and OTA packages
 
-ifeq ($(BUILD_OS),darwin)
+# Set build_ota_package, and allow opt-out below.
+build_ota_package := true
+ifeq ($(TARGET_SKIP_OTA_PACKAGE),true)
   build_ota_package := false
+endif
+ifneq (,$(filter address, $(SANITIZE_TARGET)))
+  build_ota_package := false
+endif
+ifeq ($(TARGET_PRODUCT),sdk)
+  build_ota_package := false
+endif
+# A target without a kernel may be one of the following:
+# - A generic target. In this case, the OTA package usually isn't built.
+#   PRODUCT_BUILD_GENERIC_OTA_PACKAGE may be set to true to force OTA package
+#   generation.
+# - A real device target, with TARGET_NO_KERNEL set to true and
+#   BOARD_PREBUILT_BOOTIMAGE set. In this case, it is valid to generate
+#   an OTA package.
+ifneq ($(PRODUCT_BUILD_GENERIC_OTA_PACKAGE),true)
+  ifneq ($(filter generic%,$(TARGET_DEVICE)),)
+    build_ota_package := false
+  endif
+  ifeq ($(INSTALLED_BOOTIMAGE_TARGET),)
+    ifeq ($(TARGET_NO_KERNEL),true)
+      build_ota_package := false
+    endif
+  endif # INSTALLED_BOOTIMAGE_TARGET == ""
+  ifeq ($(recovery_fstab),)
+    build_ota_package := false
+  endif
+endif # PRODUCT_BUILD_GENERIC_OTA_PACKAGE
+
+ifeq ($(BUILD_OS),darwin)
+  # A/B payload generation still requires Linux-only host tools.
+  ifeq ($(AB_OTA_UPDATER),true)
+    build_ota_package := false
+  endif
   build_otatools_package := false
 else
-  # Set build_ota_package, and allow opt-out below.
-  build_ota_package := true
-  ifeq ($(TARGET_SKIP_OTA_PACKAGE),true)
-    build_ota_package := false
-  endif
-  ifneq (,$(filter address, $(SANITIZE_TARGET)))
-    build_ota_package := false
-  endif
-  ifeq ($(TARGET_PRODUCT),sdk)
-    build_ota_package := false
-  endif
-  # A target without a kernel may be one of the following:
-  # - A generic target. In this case, the OTA package usually isn't built.
-  #   PRODUCT_BUILD_GENERIC_OTA_PACKAGE may be set to true to force OTA package
-  #   generation.
-  # - A real device target, with TARGET_NO_KERNEL set to true and
-  #   BOARD_PREBUILT_BOOTIMAGE set. In this case, it is valid to generate
-  #   an OTA package.
-  ifneq ($(PRODUCT_BUILD_GENERIC_OTA_PACKAGE),true)
-    ifneq ($(filter generic%,$(TARGET_DEVICE)),)
-      build_ota_package := false
-    endif
-    ifeq ($(INSTALLED_BOOTIMAGE_TARGET),)
-      ifeq ($(TARGET_NO_KERNEL),true)
-        build_ota_package := false
-      endif
-    endif # INSTALLED_BOOTIMAGE_TARGET == ""
-    ifeq ($(recovery_fstab),)
-      build_ota_package := false
-    endif
-  endif # PRODUCT_BUILD_GENERIC_OTA_PACKAGE
-
   # Set build_otatools_package, and allow opt-out below.
   build_otatools_package := true
   ifeq ($(TARGET_SKIP_OTATOOLS_PACKAGE),true)
