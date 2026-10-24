@@ -101,11 +101,11 @@ ifdef LOCAL_SOONG_DEX_JAR
   ifndef LOCAL_IS_HOST_MODULE
     boot_jars := $(foreach pair,$(PRODUCT_BOOT_JARS), $(call word-colon,2,$(pair)))
     ifneq ($(filter $(LOCAL_MODULE),$(boot_jars)),) # is_boot_jar
+      # Boot profiles are also needed for on-device compilation when dexpreopt is disabled.
+      ALL_MODULES.$(my_register_name).REQUIRED_FROM_TARGET += dex_bootjars
       ifeq (true,$(WITH_DEXPREOPT))
         # dex_bootjars singleton installs all of bootjars' dexpreopt files (.art, .oat, .vdex, ...)
         # This includes both the primary and secondary arches.
-        # Add them to the required list so they are installed alongside this module.
-        ALL_MODULES.$(my_register_name).REQUIRED_FROM_TARGET += dex_bootjars
         # Copy $(LOCAL_BUILT_MODULE) and its dependencies when installing boot.art
         # so that dependencies of $(LOCAL_BUILT_MODULE) (which may include
         # jacoco-report-classes.jar) are copied for every build.
