@@ -199,8 +199,10 @@ _board_true_false_vars := $(_build_broken_var_list)
 _board_strip_readonly_list += $(_build_broken_var_list) \
   BUILD_BROKEN_NINJA_USES_ENV_VARS
 
-# Conditional to building on linux, as dex2oat currently does not work on darwin.
+# Native dex2oat is available on Linux and x86_64 macOS.
 ifeq ($(HOST_OS),linux)
+  WITH_DEXPREOPT ?= true
+else ifeq ($(HOST_OS)-$(HOST_ARCH),darwin-x86_64)
   WITH_DEXPREOPT ?= true
 endif
 
